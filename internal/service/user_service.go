@@ -7,6 +7,7 @@ import (
 
 type UserServiceInterface interface {
 	FindUserByUserName(username string) (*model.User, error)
+	CreateUser(user *model.User) error
 }
 
 type UserService struct {
@@ -19,4 +20,7 @@ func NewUserService(repo *repository.UserRepository) *UserService {
 
 func (s *UserService) FindUserByUserName(username string) (*model.User, error) {
 	return s.repo.FindUserByUsername(username)
+}
+func (s *UserService) CreateUser(user *model.User) error {
+	return s.repo.CreateUser(user)
 }

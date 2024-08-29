@@ -32,9 +32,10 @@ func SetUpRoutes(router *gin.Engine, db *gorm.DB) {
 
 	authenticateHandlers := handlers.NewAuthenticateHandlers(userService, rolService)
 
-	nonAuthenticateRequiredRoutes := router.Group("/api")
+	authenticateRoutes := router.Group("/api")
 	{
-		nonAuthenticateRequiredRoutes.POST("/login", authenticateHandlers.SignIn)
+		authenticateRoutes.POST("/login", authenticateHandlers.SignIn)
+		authenticateRoutes.POST("/sign-up", authenticateHandlers.SignUp)
 	}
 
 }

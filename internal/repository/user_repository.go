@@ -22,3 +22,6 @@ func (repo *UserRepository) FindUserById(id int64) (*model.User, error) {
 	result := repo.db.Where("id = ?", id).First(&user)
 	return &user, result.Error
 }
+func (repo *UserRepository) CreateUser(user *model.User) error {
+	return repo.db.Create(user).Error
+}

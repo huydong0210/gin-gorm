@@ -28,7 +28,7 @@ func GenerateToken(user *model.User, roles []model.Role) (string, error) {
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			Issuer:    "your-app-name",
+			Issuer:    "my app",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
