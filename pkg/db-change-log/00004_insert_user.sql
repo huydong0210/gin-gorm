@@ -1,0 +1,2 @@
+insert into users(id, created_at, updated_at, deleted_at, username, password, email)
+    value (1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'admin', '$2a$14$Ef9Gbh.39iqxkMRpp/U1xOrA1JT8yh1uR3ZAjXGokhxopSct.MsjG', 'huydong0210@gmail.com')

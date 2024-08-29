@@ -11,6 +11,10 @@ import (
 func SetUpRoutes(router *gin.Engine, db *gorm.DB) {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
+
+	roleRepo := repository.NewRoleRepository(db)
+	rolService := service.NewRoleService(roleRepo)
+
 	userHandler := handlers.NewUserHandler(userService)
 
 	_ = userHandler
@@ -25,5 +29,12 @@ func SetUpRoutes(router *gin.Engine, db *gorm.DB) {
 	//	orderRoutes.PUT("/:id", orderHandler.UpdateOrder)
 	//	orderRoutes.DELETE("/:id", orderHandler.DeleteOrder)
 	//}
+
+	authenticateHandlers := handlers.NewAuthenticateHandlers(userService, rolService)
+
+	nonAuthenticateRequiredRoutes := router.Group("/api")
+	{
+		nonAuthenticateRequiredRoutes.POST("/login", authenticateHandlers.SignIn)
+	}
 
 }

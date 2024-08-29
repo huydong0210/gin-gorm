@@ -1,7 +1,8 @@
-package server
+package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"todo-list-gin-gorm/internal/api"
 	"todo-list-gin-gorm/internal/config"
 	"todo-list-gin-gorm/internal/database"
 	"todo-list-gin-gorm/pkg/logger"
@@ -27,5 +28,11 @@ func main() {
 	}
 
 	router := gin.Default()
+	api.SetUpRoutes(router, db)
+
+	err = router.Run(cfg.ServerAddress)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to start server")
+	}
 
 }
