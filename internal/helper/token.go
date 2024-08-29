@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/golang-jwt/jwt/v5"
 	"strings"
@@ -15,7 +16,7 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user *model.User, roles []model.Role) (string, error) {
+func GenerateToken(user *model.User, roles []model.Role, key string) (string, error) {
 	var roleNames string
 	for _, role := range roles {
 		roleNames += role.Name + " "
@@ -33,6 +34,18 @@ func GenerateToken(user *model.User, roles []model.Role) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString([]byte("dfgdfgdfgd"))
+	tokenString, err := token.SignedString([]byte(key))
 	return tokenString, err
+}
+
+func ParseToken(tokenString string, key string) (*jwt.Token, error) {
+	secretKey := []byte(key)
+	var result CustomClaims
+	token, err := jwt.ParseWithClaims(tokenString, &result, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return secretKey, nil
+	})
+	return token, err
 }

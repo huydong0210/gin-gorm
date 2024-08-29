@@ -11,6 +11,7 @@ type Config struct {
 	DatabaseUrl   string
 	ServerAddress string
 	LogLevel      string
+	SecretKey     string
 }
 
 func LoadConfig() (*Config, error) {
@@ -22,6 +23,7 @@ func LoadConfig() (*Config, error) {
 		DatabaseUrl:   os.Getenv("DATABASE_URL"),
 		ServerAddress: os.Getenv("SERVER_ADDRESS"),
 		LogLevel:      os.Getenv("LOG_LEVEL"),
+		SecretKey:     os.Getenv("SECRET_KEY"),
 	}
 
 	return config, nil

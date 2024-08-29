@@ -28,7 +28,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	api.SetUpRoutes(router, db)
+	api.SetUpRoutes(router, db, cfg)
 
 	err = router.Run(cfg.ServerAddress)
 	if err != nil {
