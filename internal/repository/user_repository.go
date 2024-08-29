@@ -25,3 +25,7 @@ func (repo *UserRepository) FindUserById(id int64) (*model.User, error) {
 func (repo *UserRepository) CreateUser(user *model.User) error {
 	return repo.db.Create(user).Error
 }
+func (repo *UserRepository) FindAllUser() (users []model.User, err error) {
+	err = repo.db.Find(&users).Error
+	return
+}

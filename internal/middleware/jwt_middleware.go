@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strings"
 	"todo-list-gin-gorm/internal/helper"
@@ -38,12 +37,12 @@ func JwtMiddleWare(key string) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		claims, ok := token.Claims.(*helper.CustomClaims)
+		if ok && token.Valid {
 			userPrincipal := UserPrincipal{
-				Username: claims["username"].(string),
-				Role:     claims["role"].(string),
-				Email:    claims["email"].(string),
+				Username: claims.Username,
+				Role:     claims.Role,
+				Email:    claims.Email,
 			}
 			c.Set(USER_PRICIPAL_CONTEXT_KEY, userPrincipal)
 		}

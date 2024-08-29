@@ -3,7 +3,6 @@ package helper
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	_ "github.com/golang-jwt/jwt/v5"
 	"strings"
 	"time"
 	model "todo-list-gin-gorm/internal/models"

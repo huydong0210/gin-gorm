@@ -39,7 +39,7 @@ func SetUpRoutes(router *gin.Engine, db *gorm.DB, config *config.Config) {
 	adminRoutes.Use(jwtMiddleware)
 	adminRoutes.Use(requireAdmin)
 	{
-		adminRoutes.GET("/list-user")
+		adminRoutes.GET("/list-users", userHandler.FindAllUsers)
 	}
 
 }
