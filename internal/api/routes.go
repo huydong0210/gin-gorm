@@ -14,6 +14,7 @@ func SetUpRoutes(router *gin.Engine, db *gorm.DB, config *config.Config) {
 
 	jwtMiddleware := middleware.JwtMiddleWare(config.SecretKey)
 	requireAdmin := middleware.RequireRole(middleware.ADMIN)
+	requireUser := middleware.RequireRole(middleware.USER)
 
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
@@ -40,6 +41,20 @@ func SetUpRoutes(router *gin.Engine, db *gorm.DB, config *config.Config) {
 	adminRoutes.Use(requireAdmin)
 	{
 		adminRoutes.GET("/list-users", userHandler.FindAllUsers)
+	}
+
+	todoRepo := repository.NewTodoItemRepository(db)
+	todoService := service.NewTodoItemService(todoRepo)
+	todoHandler := handlers.NewTodoItemHandler(todoService, userService)
+
+	todoItemRoutes := router.Group("/api/todo-item")
+	todoItemRoutes.Use(jwtMiddleware)
+	todoItemRoutes.Use(requireUser)
+	{
+		todoItemRoutes.GET("/:id", todoHandler.FindTodoItem)
+		todoItemRoutes.POST("", todoHandler.CreateTodoItem)
+		todoItemRoutes.DELETE("/:id", todoHandler.DeleteTodoItem)
+		todoItemRoutes.PUT("/:id", todoHandler.UpdateTodoItem)
 	}
 
 }

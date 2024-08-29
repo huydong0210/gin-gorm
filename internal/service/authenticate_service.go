@@ -2,6 +2,7 @@ package service
 
 import (
 	"gorm.io/gorm"
+	"todo-list-gin-gorm/internal/api/request"
 	"todo-list-gin-gorm/internal/config"
 	error2 "todo-list-gin-gorm/internal/error"
 	"todo-list-gin-gorm/internal/helper"
@@ -9,22 +10,13 @@ import (
 )
 
 type AuthenticateServiceInterface interface {
-	Login(request LoginRequest) (string, error)
-	SignUp(request SignUpRequest) error
+	Login(request request.LoginRequest) (string, error)
+	SignUp(request request.SignUpRequest) error
 }
 type AuthenticateService struct {
 	config      config.Config
 	userService UserServiceInterface
 	roleService RoleServiceInterface
-}
-type SignUpRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-}
-type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
 }
 
 func NewAuthenticateService(config *config.Config, userService UserServiceInterface, roleService RoleServiceInterface) *AuthenticateService {
@@ -34,7 +26,7 @@ func NewAuthenticateService(config *config.Config, userService UserServiceInterf
 		roleService: roleService,
 	}
 }
-func (s *AuthenticateService) Login(request LoginRequest) (string, error) {
+func (s *AuthenticateService) Login(request request.LoginRequest) (string, error) {
 	user, err := s.userService.FindUserByUserName(request.Username)
 	if err != nil {
 		return "", &error2.AppError{
@@ -60,8 +52,7 @@ func (s *AuthenticateService) Login(request LoginRequest) (string, error) {
 	}
 	return token, nil
 }
-func (s *AuthenticateService) SignUp(request SignUpRequest) error {
-
+func (s *AuthenticateService) SignUp(request request.SignUpRequest) error {
 	user, err := s.userService.FindUserByUserName(request.Username)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
@@ -82,7 +73,13 @@ func (s *AuthenticateService) SignUp(request SignUpRequest) error {
 		Password: hashPassword,
 		Email:    request.Email,
 	}
-	if err := s.userService.CreateUser(user); err != nil {
+	role, err := s.roleService.FindRoleByName("USER")
+	if err != nil {
+		return &error2.AppError{
+			Message: "internal server error",
+		}
+	}
+	if err := s.userService.CreateUser(user, role.ID); err != nil {
 		return &error2.AppError{
 			Message: "internal server error",
 		}

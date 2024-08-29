@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	request2 "todo-list-gin-gorm/internal/api/request"
 	"todo-list-gin-gorm/internal/service"
 )
 
@@ -15,7 +16,7 @@ func NewAuthenticateHandlers(authenticateService service.AuthenticateServiceInte
 }
 func (h *AuthenticateHandlers) SignIn(c *gin.Context) {
 
-	var request service.LoginRequest
+	var request request2.LoginRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -29,7 +30,7 @@ func (h *AuthenticateHandlers) SignIn(c *gin.Context) {
 
 }
 func (h *AuthenticateHandlers) SignUp(c *gin.Context) {
-	var request service.SignUpRequest
+	var request request2.SignUpRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

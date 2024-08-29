@@ -29,3 +29,6 @@ func (repo *UserRepository) FindAllUser() (users []model.User, err error) {
 	err = repo.db.Find(&users).Error
 	return
 }
+func (repo *UserRepository) InsertUserRole(userId uint, roleId uint) error {
+	return repo.db.Exec("insert into user_role(user_id, role_id) value ( ? , ?)", userId, roleId).Error
+}
